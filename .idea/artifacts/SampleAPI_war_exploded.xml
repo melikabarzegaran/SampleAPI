@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="SampleAPI:war exploded">
+  <artifact type="exploded-war" build-on-make="true" name="SampleAPI:war exploded">
     <output-path>$PROJECT_DIR$/target/SampleAPI</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
@@ -29,6 +29,7 @@
           <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.core:2.6.0" />
           <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.asm:2.6.0" />
           <element id="library" level="project" name="Maven: org.glassfish:javax.json:1.0.4" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:6.0.3" />
         </element>
       </element>
       <element id="directory" name="META-INF">

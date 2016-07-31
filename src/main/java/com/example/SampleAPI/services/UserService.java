@@ -34,7 +34,7 @@ public class UserService
         {
             if(profileNameParam == null || profileNameParam.isEmpty())
             {
-                throw new BadRequestException("profile name is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);
@@ -106,7 +106,7 @@ public class UserService
         {
             if(userParam == null || userParam.getProfileName() == null || userParam.getProfileName().isEmpty())
             {
-                throw new BadRequestException("profile name is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);
@@ -120,7 +120,7 @@ public class UserService
         }
         catch (SQLIntegrityConstraintViolationException e)
         {
-            throw new ConflictException("profile name is taken already.");
+            throw new ConflictException("profile name is already taken.");
         }
         catch(SQLException e)
         {
@@ -189,7 +189,7 @@ public class UserService
         {
             if(profileNameParam == null || profileNameParam.isEmpty())
             {
-                throw new BadRequestException("profile name is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);

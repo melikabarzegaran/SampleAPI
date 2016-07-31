@@ -36,7 +36,7 @@ public class PostService
         {
             if(authorParam == null || authorParam.isEmpty() || postIdParam == null || postIdParam.isEmpty())
             {
-                throw new BadRequestException("either author or post id is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);
@@ -76,7 +76,7 @@ public class PostService
         {
             if(authorParam == null || authorParam.isEmpty())
             {
-                throw new BadRequestException("author is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);
@@ -119,7 +119,7 @@ public class PostService
                     postParam.getAuthor() == null || postParam.getAuthor().isEmpty() ||
                     postParam.getMessage() == null || postParam.getMessage().isEmpty())
             {
-                throw new BadRequestException("either post or author or message is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             Post newPost = new Post(postParam.getAuthor(), postParam.getMessage());
@@ -160,7 +160,7 @@ public class PostService
                     postParam.getPostId() == null || postParam.getPostId().isEmpty() ||
                     postParam.getMessage() == null)
             {
-                throw new BadRequestException("either post or author or message is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);
@@ -198,7 +198,7 @@ public class PostService
         {
             if(authorParam == null || authorParam.isEmpty() || postIdParam == null || postIdParam.isEmpty())
             {
-                throw new BadRequestException("either author or post id is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);
@@ -230,7 +230,7 @@ public class PostService
         {
             if(authorParam == null || authorParam.isEmpty())
             {
-                throw new BadRequestException("author is not valid.");
+                throw new BadRequestException("input is not valid.");
             }
 
             connection = DriverManager.getConnection(Utility.CONNECTION);

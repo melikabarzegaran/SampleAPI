@@ -20,6 +20,18 @@ class Utility
             + "&useLegacyDatetimeCode=false"
             + "&serverTimezone=UTC";
 
+    static
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new DatabaseException(e);
+        }
+    }
+
     static void close(Connection connection, PreparedStatement preparedStatement, ResultSet resultSet)
     {
         try

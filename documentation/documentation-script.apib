@@ -1,0 +1,386 @@
+FORMAT: 1A
+
+# SampleAPI
+
+## About
+
+This is the documentation for __SampleAPI__ java RESTful web application which is implemented using `JAX-RS/Jersey`.
+
+__SampleAPI__ is a simple social media which users can join and post things and explore.
+
+# Group Users
+Search and manage users and their posts.
+
+## Paginated user collection [/users{?cursor}{&number}]
+
+### List all users [GET]
+
++ Parameters
+
+    + cursor (optional, number, `0`) ... The offset
+    + number (optional, number, `2`) ... The number of results to return per page
+
++ Response 200 (application/json)
+
+        {
+            "data": [
+                {
+                    "profileName": "profilename1",
+                    "firstName": "firstname1",
+                    "lastName": "lastname1",
+                    "links": [
+                        {
+                            "rel": "self",
+                            "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename1"
+                        },
+                        {
+                            "rel": "posts",
+                            "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename1/posts"
+                        }
+                    ]
+                },
+                {
+                    "profileName": "profilename2",
+                    "firstName": "firstname2",
+                    "lastName": "lastname2",
+                    "links": [
+                        {
+                            "rel": "self",
+                            "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename2"
+                        },
+                        {
+                            "rel": "posts",
+                            "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename2/posts"
+                        }
+                    ]
+                }
+            ],
+            "pagination": {
+                "after": 1,
+                "nextUri": "http://localhost:8080/SampleAPI/webapi/users?cursor=2&number=2"
+            }
+        }
+
+## User collection [/users]
+
+### Create a user [POST]
+
++ Request (application/json)
+
+    + body
+
+            {
+                "data": {
+                    "profileName": "profilename",
+                    "firstName": "firstname",
+                    "lastName": "lastname"
+                }
+            }
+
++ Response 201 (application/json)
+
+        {
+            "data": {
+                "profileName": "profilename",
+                "firstName": "firstname",
+                "lastName": "lastname",
+                "links": [
+                  {
+                      "rel": "self",
+                      "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                  },
+                  {
+                      "rel": "posts",
+                      "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts"
+                  }
+                ]
+            }
+        }
+
++ Response 409 (application/json)
+
+        {
+            "type": "ConflictException",
+            "code": 409,
+            "message": "profile name is already taken."
+        }
+
+## User item [/users/{profileName}]
+
++ Parameters
+
+    + profileName (required, integer) ... The unique identifier of a user
+
+### Read a user [GET]
+
++ Response 200 (application/json)
+
+        {
+            "data": {
+                "profileName": "profilename",
+                "firstName": "firstname",
+                "lastName": "lastname",
+                "links": [
+                  {
+                      "rel": "self",
+                      "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                  },
+                  {
+                      "rel": "posts",
+                      "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts"
+                  }
+                ]
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no user with such profile name is found."
+        }
+
+### Update a user [PUT]
+
++ Request (application/json)
+
+    + body
+
+            {
+                "data": {
+                    "firstName": "another firstname",
+                    "lastName": "another lastname"
+                }
+            }
+
++ Response 200 (application/json)
+
+        {
+            "data": {
+                "profileName": "profilename",
+                "firstName": "another firstname",
+                "lastName": "another firstname",
+                "links": [
+                    {
+                        "rel": "self",
+                        "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                    },
+                    {
+                        "rel": "posts",
+                        "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts"
+                    }
+                ]
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no user with such profile name is found."
+        }
+
+### Delete a user [DELETE]
+
++ Response 204
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no user with such profile name is found."
+        }
+
+## Post collection [/users/{profileName}/posts]
+
++ Parameters
+
+    + profileName (required, integer) ... The unique identifier of a user
+
+### List all posts of a user [GET]
+
++ Response 200 (application/json)
+
+        {
+            "data": [
+                {
+                    "postId": "841a5b83-2edb-447e-8f63-fce3010eaac4",
+                    "author": "profilename",
+                    "message": "This is the 1th message.",
+                    "created": "2016-08-01",
+                    "links": [
+                        {
+                            "rel": "self",
+                            "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts/841a5b83-2edb-447e-8f63-fce3010eaac4"
+                        },
+                        {
+                            "rel": "author",
+                            "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                        }
+                  ]
+              },
+              {
+                  "postId": "c4cbf682-91dc-4602-9308-7ca0762affb5",
+                  "author": "profilename",
+                  "message": "This is the 2th message.",
+                  "created": "2016-08-01",
+                  "links": [
+                      {
+                          "rel": "self",
+                          "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts/c4cbf682-91dc-4602-9308-7ca0762affb5"
+                      },
+                      {
+                          "rel": "author",
+                          "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                      }
+                  ]
+              }
+            ]
+        }
+
+### Create a post for a user [POST]
+
++ Request (application/json)
+
+    + body
+
+            {
+                "data": {
+                    "message": "This is a message."
+                }
+            }
+
++ Response 201 (application/json)
+
+        {
+            "data": {
+                "postId": "841a5b83-2edb-447e-8f63-fce3010eaac4",
+                "author": "profilename",
+                "message": "This is a message.",
+                "created": "2016-08-01",
+                "links": [
+                    {
+                        "rel": "self",
+                        "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts/841a5b83-2edb-447e-8f63-fce3010eaac4"
+                    },
+                    {
+                        "rel": "author",
+                        "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                    }
+                ]
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no author with such profile name is found."
+        }
+
+### Delete all posts of a user [DELETE]
+
++ Response 204
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no post with such author is found."
+        }
+
+## Post item [/users/{profileName}/posts/{postId}]
+
++ Parameters
+
+    + profileName (required, integer) ... The unique identifier of a user
+    + postId (required, string) ... The unique identfier of a post
+
+### Read a post of a user [GET]
+
++ Response 200 (application/json)
+
+        {
+            "data": {
+                "postId": "841a5b83-2edb-447e-8f63-fce3010eaac4",
+                "author": "profilename",
+                "message": "This is a message.",
+                "created": "2016-08-01",
+                "links": [
+                  {
+                      "rel": "self",
+                      "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts/841a5b83-2edb-447e-8f63-fce3010eaac4"
+                  },
+                  {
+                      "rel": "author",
+                      "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                  }
+                ]
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no post with such id and author is found."
+        }
+
+### Update a post for a user  [PUT]
+
++ Request (application/json)
+
+    + body
+
+            {
+                "data": {
+                    "message": "This is an another message."
+                }
+            }
+
++ Response 200 (application/json)
+
+        {
+            "data": {
+                "postId": "841a5b83-2edb-447e-8f63-fce3010eaac4",
+                "author": "profilename",
+                "message": "This is an another message.",
+                "created": "2016-08-01",
+                "links": [
+                    {
+                        "rel": "self",
+                        "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename/posts/841a5b83-2edb-447e-8f63-fce3010eaac4"
+                    },
+                    {
+                        "rel": "author",
+                        "uri": "http://localhost:8080/SampleAPI/webapi/users/profilename"
+                    }
+                ]
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no post with such id and author is found."
+        }
+
+### Delete a post for a user [DELETE]
+
++ Response 204
+
++ Response 404 (application/json)
+
+        {
+            "type": "NotFoundException",
+            "code": 404,
+            "message": "no post with such id and author is found."
+        }

@@ -44,7 +44,6 @@ public class UserResource
     public Response getAllUsers(@BeanParam PaginationFilterBean paginationFilterBean, @Context UriInfo uriInfo)
     {
         UsersRepresentation usersRepresentation;
-
         if(paginationFilterBean.getCursor() >= 0 && paginationFilterBean.getNumber() > 0)
         {
             ArrayList<User> users = UserService.getAllUsersWithPagination(paginationFilterBean.getCursor(), paginationFilterBean.getNumber());
@@ -52,12 +51,24 @@ public class UserResource
             {
                 UserResource.addSelfAndPosts(uriInfo, user);
             }
-            Cursor cursor = new Cursor(
-                    paginationFilterBean.getCursor() + paginationFilterBean.getNumber() - 1,
-                    uriInfo.getBaseUriBuilder().path(UserResource.class)
-                            .queryParam(CURSOR, paginationFilterBean.getCursor() + paginationFilterBean.getNumber())
-                            .queryParam(NUMBER, paginationFilterBean.getNumber()).build().toString()
-            );
+
+            Cursor cursor;
+            if(paginationFilterBean.getNumber() > users.size())
+            {
+                cursor = null;
+            }
+            else
+            {
+                Integer after = paginationFilterBean.getCursor() + paginationFilterBean.getNumber() - 1;
+                String nextUri = uriInfo
+                    .getBaseUriBuilder()
+                    .path(UserResource.class)
+                    .queryParam(CURSOR, paginationFilterBean.getCursor() + paginationFilterBean.getNumber())
+                    .queryParam(NUMBER, paginationFilterBean.getNumber())
+                    .build().toString();
+                cursor = new Cursor(after, nextUri);
+            }
+
             usersRepresentation = new UsersRepresentation(users, cursor);
         }
         else

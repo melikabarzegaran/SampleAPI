@@ -1,5 +1,8 @@
 package com.example.SampleAPI.models;
 
+import javax.xml.bind.annotation.XmlType;
+
+@XmlType(propOrder = {"rel", "uri"})
 public class Link
 {
     private String rel;

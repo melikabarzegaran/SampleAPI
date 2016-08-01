@@ -20,6 +20,7 @@ public class UserService
 
     private final static String GET_USER = "SELECT * FROM " + TABLE_USER + " WHERE " + PROPERTY_PROFILE_NAME + " = ?;";
     private final static String GET_ALL_USERS = "SELECT * FROM " + TABLE_USER + ";";
+    private static final String GET_ALL_USERS_WITH_PAGINATION = "SELECT * FROM " + TABLE_USER + " ORDER BY " + PROPERTY_PROFILE_NAME + " LIMIT ?,?;";
     private final static String ADD_USER = "INSERT INTO " + TABLE_USER + " VALUES(?, ?, ?);";
     private final static String UPDATE_USER_FIRST_NAME = "UPDATE " + TABLE_USER + " SET " + PROPERTY_FIRST_NAME + " = ? WHERE " + PROPERTY_PROFILE_NAME + " = ?;";
     private final static String UPDATE_USER_LAST_NAME = "UPDATE " + TABLE_USER + " SET " + PROPERTY_LAST_NAME + " = ? WHERE " + PROPERTY_PROFILE_NAME + " = ?;";
@@ -209,6 +210,43 @@ public class UserService
         finally
         {
             close(connection, preparedStatement, null);
+        }
+    }
+
+    public static ArrayList<User> getAllUsersWithPagination(Integer cursor, Integer number) throws DatabaseException
+    {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try
+        {
+            connection = DriverManager.getConnection(Utility.CONNECTION);
+            preparedStatement = connection.prepareStatement(GET_ALL_USERS_WITH_PAGINATION);
+            preparedStatement.setInt(1, cursor);
+            preparedStatement.setInt(2, number);
+            resultSet = preparedStatement.executeQuery();
+
+            ArrayList<User> users = new ArrayList<>();
+            while(resultSet.next())
+            {
+                users.add(
+                        new User(
+                                resultSet.getString(PROPERTY_PROFILE_NAME),
+                                resultSet.getString(PROPERTY_FIRST_NAME),
+                                resultSet.getString(PROPERTY_LAST_NAME)
+                        )
+                );
+            }
+
+            return users;
+        }
+        catch(SQLException e)
+        {
+            throw new DatabaseException(e);
+        }
+        finally
+        {
+            close(connection, preparedStatement, resultSet);
         }
     }
 }

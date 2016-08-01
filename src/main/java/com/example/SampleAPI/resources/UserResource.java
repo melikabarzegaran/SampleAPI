@@ -1,8 +1,10 @@
 package com.example.SampleAPI.resources;
 
+import com.example.SampleAPI.models.Cursor;
 import com.example.SampleAPI.models.User;
 import com.example.SampleAPI.representations.UserRepresentation;
 import com.example.SampleAPI.representations.UsersRepresentation;
+import com.example.SampleAPI.resources.beans.PaginationFilterBean;
 import com.example.SampleAPI.services.UserService;
 
 import javax.ws.rs.*;
@@ -15,6 +17,8 @@ import java.net.URI;
 import java.util.ArrayList;
 
 import static com.example.SampleAPI.resources.UserResource.USER_COLLECTION_RESOURCE_PATH;
+import static com.example.SampleAPI.resources.beans.PaginationFilterBean.CURSOR;
+import static com.example.SampleAPI.resources.beans.PaginationFilterBean.NUMBER;
 
 @Path(USER_COLLECTION_RESOURCE_PATH)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -37,15 +41,36 @@ public class UserResource
     }
 
     @GET
-    public Response getAllUsers(@Context UriInfo uriInfo)
+    public Response getAllUsers(@BeanParam PaginationFilterBean paginationFilterBean, @Context UriInfo uriInfo)
     {
-        ArrayList<User> users = UserService.getAllUsers();
-        for(User user : users)
+        UsersRepresentation usersRepresentation;
+
+        if(paginationFilterBean.getCursor() >= 0 && paginationFilterBean.getNumber() > 0)
         {
-            UserResource.addSelfAndPosts(uriInfo, user);
+            ArrayList<User> users = UserService.getAllUsersWithPagination(paginationFilterBean.getCursor(), paginationFilterBean.getNumber());
+            for(User user : users)
+            {
+                UserResource.addSelfAndPosts(uriInfo, user);
+            }
+            Cursor cursor = new Cursor(
+                    paginationFilterBean.getCursor() + paginationFilterBean.getNumber() - 1,
+                    uriInfo.getBaseUriBuilder().path(UserResource.class)
+                            .queryParam(CURSOR, paginationFilterBean.getCursor() + paginationFilterBean.getNumber())
+                            .queryParam(NUMBER, paginationFilterBean.getNumber()).build().toString()
+            );
+            usersRepresentation = new UsersRepresentation(users, cursor);
+        }
+        else
+        {
+            ArrayList<User> users = UserService.getAllUsers();
+            for(User user : users)
+            {
+                UserResource.addSelfAndPosts(uriInfo, user);
+            }
+            usersRepresentation = new UsersRepresentation(users);
         }
 
-        return Response.ok().entity(new UsersRepresentation(users)).build();
+        return Response.ok().entity(usersRepresentation).build();
     }
 
     @POST

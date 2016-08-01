@@ -97,7 +97,9 @@ public class PostResource
     private static URI getSelfUri(UriInfo uriInfo, String profileName, String postId)
     {
         return uriInfo
-                .getAbsolutePathBuilder()
+                .getBaseUriBuilder()
+                .path(UserResource.class)
+                .path(UserResource.class, "getPostResource")
                 .path(postId)
                 .resolveTemplate(PROFILE_NAME_PATH_PARAM, profileName)
                 .resolveTemplate(POST_ID_PATH_PARAM, postId)
